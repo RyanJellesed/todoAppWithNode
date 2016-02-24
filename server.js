@@ -14,16 +14,17 @@ var port = process.env.PORT || 8080;
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(bodyParser.json());
 
-
+app.set('view engine', 'ejs');
+app.use(express.static('public'));
 // router.use(function(req, res, next) { // middleware to 'use' for all requests
 //     console.log('Hell Yeah ' + port);
 //     next(); // make sure we go to the next routes and don't stop here
 // });
 
 
-// app.get('/', function(req, res){
-//     res.render('index', {title: 'whats up!'});
-// });
+app.get('/', function(req, res){
+    res.render('index', {title: 'whats up!'});
+});
 
 app.use('/api', lionRouter);
 

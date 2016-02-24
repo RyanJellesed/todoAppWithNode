@@ -3,7 +3,6 @@ var Schema = mongoose.Schema;
 
 var LionSchema = new Schema ({
 	name: String, 
-	id: Number,
 	age: Number, 
 	pride: String,
 	gender: String,
@@ -11,3 +10,4 @@ var LionSchema = new Schema ({
 
 
 module.exports = mongoose.model('Lion', LionSchema);
+
