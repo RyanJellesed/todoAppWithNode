@@ -1,5 +1,7 @@
 var TodoList = React.createClass({
 	render: function() {
+		var self = this;
+		// the t represents each object in the array						
 		var todosList = this.props.todos.map(function(t) {
 			return (
 				<div className="panel panel-default">
@@ -9,11 +11,16 @@ var TodoList = React.createClass({
 					<div className="panel-body">
 						{ t.age }
 					</div>
-					<div className="panel-footer">
+					<div className="panel-body">
 						{ t.pride }
 					</div>
-					<div className="panel-footer">
+					<div className="panel-body">
 						{ t.gender }
+						<br/>
+						<button className="btn btn-warning" 
+						onClick =  { self.props.handleDelete.bind(this, t._id)}> 
+						delete 
+						</button>
 					</div>
 				</div>
 				)
@@ -36,6 +43,8 @@ var App = React.createClass({
 	},
 
 
+
+
 	loadTodosFromServer: function () {
 		var self = this;
 
@@ -49,6 +58,26 @@ var App = React.createClass({
 		});
 	},
 
+
+
+
+
+	handleDelete: function(id) {
+		var id = id;
+		var self = this;
+		$.ajax({
+			url: '/api/lions/' + id,
+			method: 'DELETE'
+		}).done(function(){
+			console.log('deleted todo');
+			self.loadTodosFromServer();
+		})
+		// alert("Is this your id? " + id);
+	},
+
+
+
+
 	componentDidMount: function () {
 		this.loadTodosFromServer();
 	},
@@ -57,7 +86,7 @@ var App = React.createClass({
 		return (
 			<div>
 				<h3> Hello World! </h3>
-				<TodoList todos={ this.state.lions } />
+				<TodoList handleDelete= { this.handleDelete } todos={ this.state.lions } />
 			</div>
 			)
 	}
