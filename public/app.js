@@ -33,6 +33,86 @@ var TodoList = React.createClass({
 	}
 });
 
+var TodoForm = React.createClass({
+	getInitialState: function() {
+		return {
+			name: '',
+			age: '',
+			pride: '',
+			gender: '',
+		}
+	},
+	handleNameChange: function(e) {
+		this.setState({
+			name: e.target.value
+		})
+	},
+
+	handleAgeChange: function(e) {
+		this.setState({
+			age: e.target.value
+		})
+	},
+
+	handlePrideChange: function(e) {
+		this.setState({
+			pride: e.target.value
+		})
+	},
+
+	handleGenderChange: function(e) {
+		this.setState({
+			gender: e.target.value
+		})
+	},
+
+	handleForm: function(e){
+		e.preventDefault();
+		var name = this.state.name;
+		var age = this.state.age;
+		var pride = this.state.pride;
+		var gender = this.state.gender;
+		this.props.handleSubmit({
+			name: name,
+			age: age,
+			pride: pride,
+			gender: gender,
+		})
+	},
+
+	render: function() {
+		var self = this;
+		// the t represents each object in the array						
+			return (
+					<form onSubmit={this.handleForm} action="" role="form">
+						<legend>Form title</legend>
+
+						<div className="form-group">
+							<label for="">Name</label>
+							<input onChange={this.handleNameChange} value={this.state.name} type="text" className="form-control" id="" placeholder="Name"/>
+						</div>
+
+						<div className="form-group">
+							<label for="">Age</label>
+							<input onChange={this.handleAgeChange} value={this.state.age} type="text" className="form-control" id="" placeholder="Age"/>
+						</div>
+
+						<div className="form-group">
+							<label for="">Pride</label>
+							<input onChange={this.handlePrideChange} value={this.state.pride} type="text" className="form-control" id="" placeholder="Pride"/>
+						</div>
+
+						<div className="form-group">
+							<label for="">Gender</label>
+							<input onChange={this.handleGenderChange} value={this.state.gender} type="text" className="form-control" id="" placeholder="Gender"/>
+						</div>
+
+						<button type="submit" className="btn btn-primary">Submit</button>
+					</form>
+				)
+	}
+});
+
 var App = React.createClass({
 	
 	// get initial state is a react object
@@ -58,9 +138,19 @@ var App = React.createClass({
 		});
 	},
 
-
-
-
+	handleSubmit: function (todo) {
+		var self = this;
+		console.log(todo);
+		$.ajax({
+			url: '/api/lions',
+			method: 'POST',
+			data: todo
+		}).done(function(data){
+			console.log(data)
+			self.loadTodosFromServer();
+			console.log('posted');
+		})
+	},
 
 	handleDelete: function(id) {
 		var id = id;
@@ -72,11 +162,8 @@ var App = React.createClass({
 			console.log('deleted todo');
 			self.loadTodosFromServer();
 		})
-		// alert("Is this your id? " + id);
+
 	},
-
-
-
 
 	componentDidMount: function () {
 		this.loadTodosFromServer();
@@ -87,6 +174,7 @@ var App = React.createClass({
 			<div>
 				<h3> Hello World! </h3>
 				<TodoList handleDelete= { this.handleDelete } todos={ this.state.lions } />
+				<TodoForm handleSubmit= {this.handleSubmit} />
 			</div>
 			)
 	}
